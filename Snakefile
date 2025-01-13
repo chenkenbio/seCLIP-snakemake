@@ -425,7 +425,7 @@ rule step92_clipper_peakcluster:
         bam = outdir / "alignment_star/{sample}/{sample}.umi.r1.fq.genome-mappedSoSo.rmDupSo.bam",
         gff = config["clipper_gff"].replace(CLIPPER_GFF_SUFFIX, "_line-r{nr}" + CLIPPER_GFF_SUFFIX)
     params:
-        species = os.path.basename(config["clipper_gff"]).replace(CLIPPER_GFF_SUFFIX, ""),
+        species = lambda wildcards: os.path.basename(config["clipper_gff"]).replace(CLIPPER_GFF_SUFFIX, "") + f"_line-r{wildcards.nr}",
         clipper_img = BIN["clipper_img"],
         ref_path = CLIPPER_DATA
     output:
@@ -520,7 +520,7 @@ rule step94_make_bigwig:
     shell:
         """
         singularity run \
-            --bind /home/kenchen/db:/home/kenchen/db \
+            --bind /project2/mengjiechen/kenchen/db:/mnt/db \
             {params.makebigwigfiles_img} \
             makebigwigfiles \
             --bw_pos {output.pos_bw} \
