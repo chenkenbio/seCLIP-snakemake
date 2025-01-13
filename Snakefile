@@ -429,7 +429,7 @@ rule step92_clipper_peakcluster:
         clipper_img = BIN["clipper_img"],
         ref_path = CLIPPER_DATA
     output:
-        chrom_bed = protected(outdir / "peak_cluster/{sample}/{sample}.umi.r1.fq.genome-mappedSoSo.rmDupSo.peakClusters.line-r{nr}.bed")
+        partial_bed = protected(outdir / "peak_cluster/{sample}/{sample}.umi.r1.fq.genome-mappedSoSo.rmDupSo.peakClusters.line-r{nr}.bed")
     log:
         protected(outdir / "peak_cluster/{sample}/{sample}.umi.r1.fq.genome-mappedSoSo.rmDupSo.peakClusters.line-r{nr}.log")
     threads:
@@ -443,8 +443,8 @@ rule step92_clipper_peakcluster:
             {params.clipper_img} clipper \
             --species {params.species} \
             --bam {input.bam} \
-            --outfile {output.chrom_bed} \
-            --processors {threads} &> {log}
+            --outfile {output.partial_bed} \
+            --processors {threads} &> {log} && touch {output.partial_bed}
         """
 rule step92_merge_peak_clusters:
     priority: -10
